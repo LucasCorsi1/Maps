@@ -16,7 +16,8 @@ namespace googlemaps
         private GMapOverlay overlay = new GMapOverlay("Marcador");
 
 
-        public Form1()
+
+        public Form1()  // configs iniciais
         {
             InitializeComponent();
             points = new List<PointLatLng>();
@@ -30,7 +31,7 @@ namespace googlemaps
 
         }
 
-        private void btnCarregar_Click(object sender, EventArgs e)
+        private void btnCarregar_Click(object sender, EventArgs e) // carrega lat e long preenchido.
         {
             altitude = Convert.ToDouble(textBoxLatitude.Text);
             longitude = Convert.ToDouble(textBoxLongitude.Text);
@@ -38,7 +39,7 @@ namespace googlemaps
             Map.Zoom = 15;
         }
 
-        private void buttonmaker_Click(object sender, EventArgs e)
+        private void buttonmaker_Click(object sender, EventArgs e) // marca pelo botão
         {
             points.Add(new PointLatLng(altitude, longitude));
 
@@ -52,12 +53,12 @@ namespace googlemaps
 
         private void buttonroute_Click(object sender, EventArgs e)
         {
-            // marcar os pontos de rotas mouse direito ou botao
-
-
             MapRoute route0 = GoogleMapProvider.Instance.GetRoute(points[0], points[1], false, false, 12);
             MapRoute route1 = GoogleMapProvider.Instance.GetRoute(points[1], points[2], false, false, 12);
             MapRoute route2 = GoogleMapProvider.Instance.GetRoute(points[2], points[3], false, false, 12);
+            MapRoute route3 = GoogleMapProvider.Instance.GetRoute(points[3], points[4], false, false, 12);
+            MapRoute route4 = GoogleMapProvider.Instance.GetRoute(points[4], points[5], false, false, 12);
+            MapRoute route5 = GoogleMapProvider.Instance.GetRoute(points[5], points[0], false, false, 12);
 
             GMapRoute rt1 = new GMapRoute(route0.Points, "My Route1")
             {
@@ -71,22 +72,59 @@ namespace googlemaps
             {
                 Stroke = new Pen(Color.Yellow, 5)
             };
+            GMapRoute rt4 = new GMapRoute(route3.Points, "My Route4")
+            {
+                Stroke = new Pen(Color.Aqua, 5)
+            };
+            GMapRoute rt5 = new GMapRoute(route4.Points, "My Route5")
+            {
+                Stroke = new Pen(Color.Azure, 5)
+            };
+            GMapRoute rt6 = new GMapRoute(route5.Points, "My Route6")
+            {
+                Stroke = new Pen(Color.Bisque, 5)
+            };
 
             GMapOverlay routes = new GMapOverlay("Routes");
             routes.Routes.Add(rt1);
             routes.Routes.Add(rt2);
             routes.Routes.Add(rt3);
+            routes.Routes.Add(rt4);
+            routes.Routes.Add(rt5);
+            routes.Routes.Add(rt6);
 
             Map.Overlays.Add(routes);
 
-            double total = Math.Round(route0.Distance + route1.Distance + route2.Distance, 3);
+            double total = Math.Round(route0.Distance + route1.Distance + route2.Distance + route3.Distance + route4.Distance + route5.Distance, 3); // custo total
 
             labelKm.Text = "Distancia Total :  " + total.ToString() + " Km ";
             RefreshMap();
- 
+
+                        /*  Tentativa de matriz
+             *  List<MapRoute> mapRoutes = new List<MapRoute>();
+            mapRoutes.Add(route0);
+            mapRoutes.Add(route1);
+            mapRoutes.Add(route2);
+            mapRoutes.Add(route3);
+            mapRoutes.Add(route4);
+            mapRoutes.Add(route5);
+
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    if (i == j)
+                    {
+                        grafo[i, j] = 0;
+                    }
+                    grafo[i, j] = mapRoutes[i].Distance;
+                }
+
+            }*/
+
         }
 
-        private void buttonclean_Click(object sender, EventArgs e)
+        private void buttonclean_Click(object sender, EventArgs e) // limpa todos os dados do mapa
         {
             if (Map.Overlays.Count > 0)
             {
@@ -101,16 +139,16 @@ namespace googlemaps
         }
 
 
-        private void RefreshMap()
+        private void RefreshMap()  // atualiza informação do mapa
         {
             Map.Zoom--;
             Map.Zoom++;
         }
 
 
-        // marca com o botão do mouse
+   
 
-        private void Map_MouseClick(object sender, MouseEventArgs e)
+        private void Map_MouseClick(object sender, MouseEventArgs e)      // marca o ponto  com o botão direito do mouse 
         {
             if (e.Button == MouseButtons.Right)
             {
@@ -122,8 +160,8 @@ namespace googlemaps
                 textBoxLatitude.Text = altitude.ToString();
                 textBoxLongitude.Text = longitude.ToString();
 
-                AddMaker(Point);
-                points.Add(Point);
+                AddMaker(Point); // adiciona marcador ao mapa
+                points.Add(Point);  // adiciona pontos a lista
                 RefreshMap();
 
             }
@@ -131,12 +169,12 @@ namespace googlemaps
         }
 
 
-        private void loadMap(PointLatLng point)
+        private void loadMap(PointLatLng point) // recarrega posição
         {
             Map.Position = point;
         }
 
-        private void AddMaker(PointLatLng pointLatLng, GMarkerGoogleType gMarker = GMarkerGoogleType.arrow)
+        private void AddMaker(PointLatLng pointLatLng, GMarkerGoogleType gMarker = GMarkerGoogleType.arrow) // adiciona o marcador e mostra informação quando passado mouse por cima do ponto marcado
         {
 
             GMarkerGoogle Marker = new GMarkerGoogle(pointLatLng, gMarker)
