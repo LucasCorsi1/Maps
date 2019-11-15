@@ -39,6 +39,7 @@
             this.textBoxLongitude = new System.Windows.Forms.TextBox();
             this.textBoxLatitude = new System.Windows.Forms.TextBox();
             this.labelKm = new System.Windows.Forms.Label();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // btnCarregar
@@ -175,11 +176,20 @@
             this.labelKm.TabIndex = 19;
             this.labelKm.Text = "Km";
             // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(824, 362);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(287, 322);
+            this.richTextBox1.TabIndex = 20;
+            this.richTextBox1.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1123, 739);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.labelKm);
             this.Controls.Add(this.textBoxLatitude);
             this.Controls.Add(this.textBoxLongitude);
@@ -210,6 +220,7 @@
         private System.Windows.Forms.TextBox textBoxLongitude;
         private System.Windows.Forms.TextBox textBoxLatitude;
         private System.Windows.Forms.Label labelKm;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 
