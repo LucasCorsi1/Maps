@@ -39,7 +39,7 @@
             this.textBoxLongitude = new System.Windows.Forms.TextBox();
             this.textBoxLatitude = new System.Windows.Forms.TextBox();
             this.labelKm = new System.Windows.Forms.Label();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.labelRoute = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnCarregar
@@ -172,6 +172,7 @@
             // 
             // labelKm
             // 
+            this.labelKm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelKm.AutoSize = true;
             this.labelKm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelKm.Location = new System.Drawing.Point(820, 214);
@@ -180,21 +181,23 @@
             this.labelKm.TabIndex = 19;
             this.labelKm.Text = "Km";
             // 
-            // richTextBox1
+            // labelRoute
             // 
-            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox1.Location = new System.Drawing.Point(824, 362);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(287, 322);
-            this.richTextBox1.TabIndex = 20;
-            this.richTextBox1.Text = "";
+            this.labelRoute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelRoute.AutoSize = true;
+            this.labelRoute.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRoute.Location = new System.Drawing.Point(820, 252);
+            this.labelRoute.Name = "labelRoute";
+            this.labelRoute.Size = new System.Drawing.Size(48, 20);
+            this.labelRoute.TabIndex = 21;
+            this.labelRoute.Text = "Rota";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1123, 739);
-            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.labelRoute);
             this.Controls.Add(this.labelKm);
             this.Controls.Add(this.textBoxLatitude);
             this.Controls.Add(this.textBoxLongitude);
@@ -226,7 +229,7 @@
         private System.Windows.Forms.TextBox textBoxLongitude;
         private System.Windows.Forms.TextBox textBoxLatitude;
         private System.Windows.Forms.Label labelKm;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Label labelRoute;
     }
 }
 

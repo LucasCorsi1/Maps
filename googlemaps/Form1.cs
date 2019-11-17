@@ -2,22 +2,26 @@
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
+using googlemaps.Properties;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace googlemaps
 {
     public partial class Form1 : Form
     {
+        // variaveis globais
         private double alt, lng;
         private GMapOverlay overlay = new GMapOverlay("Marcador");
         private double[,] Graph;
-        private Connections MakerPoint = new Connections();
+        private Connections MakerPoint;
         private List<PointLatLng> pointLatLngs = new List<PointLatLng>();
         private List<Connections> GetConnections = new List<Connections>();
         private TSP travellingSalesProblem = new TSP();
-        Route route;
+        private Route route;
+        private int ID = 0;
 
 
         public Form1()  // configs iniciais
@@ -30,7 +34,6 @@ namespace googlemaps
             Map.MinZoom = 3;
             Map.MaxZoom = 15;
             Map.Zoom = 12;
-
         }
 
         private void btnCarregar_Click(object sender, EventArgs e) // carrega lat e long preenchido.
@@ -48,6 +51,7 @@ namespace googlemaps
             loadMap(point);
             AddMaker(point);
             RefreshMap();
+            ID++;
 
         }
 
@@ -55,28 +59,37 @@ namespace googlemaps
         {
             GraphGenerator();
             double cust = 0;
-            foreach (Connections con in GetConnections)
-            {
-                con.Visited = false;
-            }
-            GetConnections[pointLatLngs.Count - 1].Visited = true;
-            route =  travellingSalesProblem.Solve(Graph, GetConnections);
-            GMapOverlay routes = new GMapOverlay("Routes");
+            GetConnections[0].Visited = true;
 
+            route = travellingSalesProblem.Solve(Graph, GetConnections);
+
+            GMapOverlay routes = new GMapOverlay("Routes");
             for (int i = 0; i < route.Routes.Count; i++)
             {
                 if (i + 1 < route.Routes.Count)
                 {
                     MapRoute mapRoute = GoogleMapProvider.Instance.GetRoute(route.Routes[i].Point, route.Routes[i + 1].Point, false, false, 12);
-                    GMapRoute gMapRoute = new GMapRoute(mapRoute.Points, "My Route");
+                    GMapRoute gMapRoute = new GMapRoute(mapRoute.Points, "Route1")
+                    {
+                        Stroke = new Pen(Color.Cyan, 3)
+                    };
                     routes.Routes.Add(gMapRoute);
                     Map.Overlays.Add(routes);
                     cust += gMapRoute.Distance;
                 }
+
+
             }
             RefreshMap();
+            labelKm.Text += $" : {cust.ToString("N2")}";
+            string readRoute = "";
+            foreach (Connections con in route.Routes)
+            {
+                readRoute += con.Id + "  ";
+            }
+            readRoute = readRoute.Substring(0, readRoute.Length - 1);
+            labelRoute.Text += "  " + readRoute + "   " + Environment.NewLine;
 
-            labelKm.Text += cust.ToString("N2"); 
         }
 
         private void GraphGenerator() // gerar matriz de custo
@@ -86,7 +99,8 @@ namespace googlemaps
             {
                 for (int j = 0; j < Graph.GetLength(1); j++)
                 {
-                    Graph[i, j] = GoogleMapProvider.Instance.GetRoute(pointLatLngs[i], pointLatLngs[j], false, false, 12).Distance;/// gera a matriz com valores     
+                    MapRoute mapRoute = GoogleMapProvider.Instance.GetRoute(pointLatLngs[i], pointLatLngs[j], false, false, 12);
+                    Graph[i, j] = mapRoute.Distance;/// gera a matriz com valores     
                 }
             }
 
@@ -94,13 +108,13 @@ namespace googlemaps
 
         private void buttonclean_Click(object sender, EventArgs e) // limpa todos os dados do mapa
         {
-            if (Map.Overlays.Count > 0)
+            if (Map.Overlays.Count > 0 && overlay.Markers.Count > 0)
             {
                 route.Routes.Clear();
                 Map.Overlays.Remove(overlay);
                 Map.Overlays.RemoveAt(0);
-                Map.Refresh();
                 labelKm.Text = "Km";
+                labelRoute.Text = "Route ";
                 overlay.Markers.RemoveAt(0);
                 RefreshMap();
             }
@@ -122,9 +136,10 @@ namespace googlemaps
                     lng = Point.Lng;
                     textBoxLatitude.Text = alt.ToString();
                     textBoxLongitude.Text = lng.ToString();
-                    AddMaker(Point); // adiciona marcador ao mapa
                     pointLatLngs.Add(Point);  // adiciona pontos a lista
+                    AddMaker(Point); // adiciona marcador ao mapa
                     RefreshMap();
+                    ID++;
                 }
                 else
                 {
@@ -137,19 +152,49 @@ namespace googlemaps
         {
             Map.Position = point;
         }
-        private void AddMaker(PointLatLng pointLatLng, GMarkerGoogleType gMarker = GMarkerGoogleType.arrow) // adiciona o marcador e mostra informação quando passado mouse por cima do ponto marcado
+
+        private void AddMaker(PointLatLng pointLatLng) // adiciona o marcador e mostra informação quando passado mouse por cima do ponto marcado
         {
-            GMarkerGoogle Marker = new GMarkerGoogle(pointLatLng, gMarker)
-            {
-                ToolTipText = $"Lat: {Map.Position.Lat} + Long: {Map.Position.Lng}"
-            };
-            MakerPoint.SetId(pointLatLngs.Count);
-            MakerPoint.Point = pointLatLng;
-            MakerPoint.Visited = false;
+            Bitmap bitmapMaker0 = new Bitmap(Resources.number_0);
+            Bitmap bitmapMaker1 = new Bitmap(Resources.number_1);
+            Bitmap bitmapMaker2 = new Bitmap(Resources.number_2);
+            Bitmap bitmapMaker3 = new Bitmap(Resources.number_3);
+            Bitmap bitmapMaker4 = new Bitmap(Resources.number_4);
+            Bitmap bitmapMaker5 = new Bitmap(Resources.number_5);
+            MakerPoint = new Connections(ID, pointLatLng, false);
             GetConnections.Add(MakerPoint);
-            overlay.Markers.Add(Marker);
             Map.Overlays.Add(overlay);
             RefreshMap();
+            GMarkerGoogle Marker;
+            switch (MakerPoint.Id)
+            {
+                case 0:
+                    Marker = new GMarkerGoogle(pointLatLng, bitmapMaker0) { ToolTipText = $"ID: {MakerPoint.Id}" };
+                    overlay.Markers.Add(Marker);
+                    break;
+                case 1:
+                    Marker = new GMarkerGoogle(pointLatLng, bitmapMaker1) { ToolTipText = $"ID: {MakerPoint.Id}" };
+                    overlay.Markers.Add(Marker);
+                    break;
+                case 2:
+                    Marker = new GMarkerGoogle(pointLatLng, bitmapMaker2) { ToolTipText = $"ID: {MakerPoint.Id}" };
+                    overlay.Markers.Add(Marker);
+                    break;
+                case 3:
+                    Marker = new GMarkerGoogle(pointLatLng, bitmapMaker3) { ToolTipText = $"ID: {MakerPoint.Id}" };
+                    overlay.Markers.Add(Marker);
+                    break;
+                case 4:
+                    Marker = new GMarkerGoogle(pointLatLng, bitmapMaker4) { ToolTipText = $"ID: {MakerPoint.Id}" };
+                    overlay.Markers.Add(Marker);
+                    break;
+                case 5:
+                    Marker = new GMarkerGoogle(pointLatLng, bitmapMaker5) { ToolTipText = $"ID: {MakerPoint.Id}" };
+                    overlay.Markers.Add(Marker);
+                    break;
+                default:
+                    break;
+            }
         }
 
     }

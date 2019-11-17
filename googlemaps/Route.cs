@@ -15,9 +15,9 @@ namespace googlemaps
 
         public Route( Connections connections)
         {
-            init = connections;
-            current = connections;
-            routes.Add(connections);
+            this.init = connections;
+            this.current = connections;
+            this.routes.Add(connections);
         }
 
         public double Cust { get => cust; set => cust = value; }

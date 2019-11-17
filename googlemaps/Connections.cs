@@ -13,16 +13,14 @@ namespace googlemaps
         private PointLatLng point;
         private bool visited;
 
-        public int GetId()
+        public Connections(int id, PointLatLng point, bool visited)
         {
-            return id;
+            this.id = id;
+            this.point = point;
+            this.visited = visited;
         }
 
-        public void SetId(int value)
-        {
-            id = value;
-        }
-
+        public int Id { get => id; set => id = value; }
         public PointLatLng Point { get => point; set => point = value; }
         public bool Visited { get => visited; set => visited = value; }
     }
